@@ -1,6 +1,9 @@
-package client;
+package client.src;
 
 import java.util.Scanner;
+
+import Constants.Currency;
+import client.src.UdpClient.UdpClient;
 
 public class Main {
     static Scanner sc;
@@ -85,13 +88,20 @@ public class Main {
         System.out.print("Password: ");
         String password = sc.next();
 
-        System.out.print("Currency type: ");
-        String currencyType = sc.next();
+        System.out.println("Currency type:");
+        int i = 1;
+        Currency[] currencies = Currency.values();
+        for (Currency c: currencies) {
+            System.out.printf("%d. %s\n", i, c);
+            i += 1;
+        }
+        int choice = sc.nextInt();
+        Currency currency = currencies[choice-1];
 
         System.out.print("Initial balance: ");
         Float balance = sc.nextFloat();
 
-        return "1_" + String.join("|", name, password, currencyType, balance.toString());
+        return "1_" + String.join("|", name, password, currency.toString(), balance.toString());
     }
     private static String closeAccount() {
         System.out.print("Name: ");
@@ -107,8 +117,6 @@ public class Main {
     }
 
     private static String depositOrWithdraw() {
-        System.out.println("Deposit or withdraw:");
-        Integer choice = sc.nextInt();
 
         System.out.print("Name: ");
         String name = sc.next();
@@ -119,13 +127,15 @@ public class Main {
         System.out.print("Password: ");
         String password = sc.next();
 
-        System.out.print("Currency Type: ");
-        String currencyType = sc.next();
+        System.out.println("Deposit or withdraw:");
+        System.out.println("1. Deposit");
+        System.out.println("2. Withdraw");
+        Integer choice = sc.nextInt();
 
         System.out.print("Amount: ");
         Float amount = sc.nextFloat();
 
-        return "3_" + String.join("|", choice.toString(), name, acctNum.toString(), password, currencyType, amount.toString());
+        return "3_" + String.join("|", name, acctNum.toString(), password, choice.toString(), amount.toString());
     }
 
     private static String monitorUpdates() {

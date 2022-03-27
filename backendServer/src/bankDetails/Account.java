@@ -1,14 +1,7 @@
-package bankDetails;
+package backendServer.src.bankDetails;
 import java.util.*;
 
-enum Currency{
-    SGD,
-    USD,
-    MYR,
-    JPY,
-    KRW
-}
-
+import Constants.Currency;
 
 public class Account{
     private int accNumber;
@@ -18,6 +11,7 @@ public class Account{
     private float accBalance;
 
     //Constructor
+    public Account() {}
     public Account(int accNumber, String accHolderName, String accPassword, Currency accCurr, float accBalance)
     {
         this.accNumber = accNumber;
@@ -45,13 +39,10 @@ public class Account{
     public void setAccPassword(String accPassword){
         this.accPassword = accPassword;
     }
-    public String getAccHolderName(){
-        return accHolderName;
-    }
     public Currency getAccCurr(){
         return accCurr;
     }
-    public void setAccCurr(accCurr){
+    public void setAccCurr(Currency accCurr){
         this.accCurr = accCurr;
     }
     public float getAccBalance(){

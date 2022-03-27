@@ -1,56 +1,64 @@
-package bankDetails;
+package backendServer.src.bankDetails;
 
+import java.io.IOException;
 import java.util.*;
-import Account.*
+import java.util.Map.Entry;
+
+import Constants.Currency;
+import backendServer.src.Callback.Callback;
 
 public class Bank {
-    public static HashMap<Integer, Account> allAccounts;
-    public Bank(){
-        allAccounts = newHashMap<>();
+    private HashMap<Integer, Account> allAccounts;
+    private Vector<Callback> allCallbacks;
+
+    public Bank() {
+        allAccounts = new HashMap<>();
+        allCallbacks = new Vector<>();
     }
 
-    public static int createAccount(String accHolderName, String accPassword, Currency accCurr, float accBalance){
-        //Generate random accountNumber using UUID
-        do{
-            int accNum =Integer.parseInt(String.format("%040d", new BigInteger(UUID.randomUUID().toString().replace("-", ""), 10)));
-        }while(allAccounts.get(accNum) != null);
+    public int createAccount(String accHolderName, String accPassword, Currency accCurr, float accBalance) {
+        // Generate random accountNumber using UUID
+        int accNum;
+        do {
+            accNum = new Random().nextInt(900000) + 100000;
+        } while (allAccounts.get(accNum) != null);
 
-        Account newAcc = new Account.AccountBuilder().createAccount(accNum, accHolderName, accCurr, accPassword, accBalance)
-                                                    .build();
+        Account newAcc = new Account.AccountBuilder()
+                .createAccount(accNum, accHolderName, accCurr, accPassword, accBalance)
+                .build();
 
         allAccounts.put(accNum, newAcc);
-        System.out.println("Account created, your account number is :", accNum);
+        System.out.println("Account created, your account number is: " + accNum);
+        triggerCallback(String.format("Account %d created", accNum));
+
         return accNum;
     }
 
     // Check balance for account
-    public static float checkBalance(int accNum, String accPassword){
+    public float checkBalance(int accNum, String accPassword) {
         float balance = 0;
         Account acc = allAccounts.get(accNum);
-        //Check if account exists inside the bank
-        if(acc != null){
-            //Check if inputted password is correct
-            if(acc.getAccPassword() == accPassword)
-            {
+        // Check if account exists inside the bank
+        if (acc != null) {
+            // Check if inputted password is correct
+            if (acc.getAccPassword().equals(accPassword)) {
                 balance = acc.getAccBalance();
-            }
-            else
+            } else
                 balance = -2; // if the return value is -2, its an incorrect pin
-        }
-        else {
+        } else {
             balance = -1; // if return value is -1, that means account doesnt exist
         }
         return balance;
     }
 
-    public static float updateBalance(String accHolderName, int accNum, String accPassword, int choice, float amount){
-        System.out.println("Your choice is:", choice);
+    public float updateBalance(String accHolderName, int accNum, String accPassword, int choice, float amount){
+        System.out.println("Your choice is: " + choice);
 
         //If account doesnt exit
         if(allAccounts.get(accNum) == null)
             return -1;
         //If pin entered was incorrect
-        if(allAccounts.get(accNum).getAccountPassword != accPassword)
+        if(!allAccounts.get(accNum).getAccPassword().equals(accPassword))
             return -2;
 
 
@@ -58,19 +66,21 @@ public class Bank {
         {
             Account temp = allAccounts.get(accNum);
             temp.setAccBalance(temp.getAccBalance() + amount);
+            triggerCallback(String.format("%.2f deposited into %d", amount, accNum));
         }
 
         //Withdraw money choice = 1
         if(choice == 2){
             Account temp = allAccounts.get(accNum);
 
-            if(temp.getAccountBalance() > amount)
+            if(temp.getAccBalance() > amount)
             {
                 temp.setAccBalance(temp.getAccBalance() - amount);
-                System.out.println("You have withdrawn " + amount "." + " The remaining balance in your account is " + temp.getAccBalance());
+                System.out.println("You have withdrawn " + amount + "." + " The remaining balance in your account is " + temp.getAccBalance());
+                triggerCallback(String.format("%.2f withdrawn from %d", amount, accNum));
             }
             else {
-                System.out.println("Account balance is insufficient: ", Float.toString(temp.getAccBalance()));
+                System.out.printf("Account balance is insufficient: ", Float.toString(temp.getAccBalance()));
                 return -3;
             }
         }
@@ -80,14 +90,15 @@ public class Bank {
         return allAccounts.get(accNum).getAccBalance();
     }
 
-    public static int closeAccount(String accHolderName, int accNum, String accPassword){
+    public int closeAccount(String accHolderName, int accNum, String accPassword){
         Account temp = allAccounts.get(accNum);
 
         if(temp != null) {
-            if(temp.getAccountPassword() == accPassword)
+            if(temp.getAccPassword().equals(accPassword))
             {
                 allAccounts.remove(accNum);
                 System.out.println("Account has been removed");
+                triggerCallback(String.format("Account %d removed", accNum));
                 return 1;
             }
             // If pin entered was incorrect
@@ -96,6 +107,30 @@ public class Bank {
         }
         //If account doesn't exist inside the bank
         else
-            return -1
+            return -1;
     }
+
+    public void addCallback(String address, Callback callback) {
+        allCallbacks.add(callback);
+    }
+
+    public void triggerCallback(String message) {
+        Iterator<Callback> iterator = allCallbacks.iterator();
+
+        while (iterator.hasNext()) {
+            Callback callback = iterator.next();
+
+            if (callback.checkTtl()) {
+                try {
+                    callback.send(message);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            } else {
+                iterator.remove();
+            }
+        }
+    }
+
 }

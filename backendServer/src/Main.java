@@ -1,8 +1,14 @@
-package server;
+package backendServer.src;
+
+import Constants.Currency;
+import backendServer.src.Callback.Callback;
+import backendServer.src.UdpServer.UdpServer;
+import backendServer.src.bankDetails.Bank;
 
 public class Main {
 
     private static UdpServer server;
+    private static Bank bank;
 
     public static void main (String args[]) {
         int port = 1234;
@@ -15,7 +21,9 @@ public class Main {
             System.out.printf("Invocation semantics: %s\n", amo ? "at-most-once" : "at-least-once");
             System.out.println("Starting server...");
 
+
             server = new UdpServer(port);
+            bank = new Bank();
 
             while (true) {
                 String request = server.receive();
@@ -49,22 +57,44 @@ public class Main {
 
     public static String processRequest(int option, String payload) {
         String response = "";
+        String[] arr = payload.split("\\|");
+
         switch (option) {
             case 1:
-                // response = openAccount();
+                Currency curr = Currency.valueOf(arr[2]);
+                int acctNum = bank.createAccount(arr[0],  arr[1], curr, Float.parseFloat(arr[3]));
+                response = String.format("Account created with account number %d", acctNum);
                 break;
             case 2:
-                // response = closeAccount();
+                int result = bank.closeAccount(arr[0],  Integer.parseInt(arr[1]), arr[2]);
+                if (result == 1) {
+                    response = "Account has been removed";
+                }
+                else if (result == -1) {
+                    response = "Account does not exist";
+                } else if (result == -2) {
+                    response = "PIN is incorrect";
+                }
                 break;
             case 3:
-                // response = depositOrWithdraw();
+                float balance = bank.updateBalance(arr[0], Integer.parseInt(arr[1]), arr[2], Integer.parseInt(arr[3]), Float.parseFloat(arr[4]));
+                if (balance == -1) {
+                    response = "Account does not exist";
+                }
+                else if (balance == -2) {
+                    response = "Pin is incorrect";
+                } else if (balance == -3) {
+                    response = "Account balance insufficient";
+                } else {
+                    response = String.format("Success, balance is %.2f", balance);
+                }
                 break;
             case 4:
-                // String address = server.getClientAddress();
-                // int port = server.getClientPort();
-                // Callback cb = new Callback(server.getSocket(), address, port, 1000);
-                // monitorUpdates(String.format("%s:%d", address, port), cb);
-                // response = "Done";
+                String address = server.getClientAddress();
+                int port = server.getClientPort();
+                Callback cb = new Callback(server.getSocket(), address, port, 1000);
+                bank.addCallback(String.format("%s:%d", address, port), cb);
+                response = "Done";
                 break;
             case 5:
                 // response = idempotent();

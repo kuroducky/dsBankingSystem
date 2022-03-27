@@ -1,4 +1,4 @@
-package client;
+package client.src.UdpClient;
 
 import java.io.*;
 import java.net.*;
@@ -50,12 +50,11 @@ public class UdpClient {
     }
 
     public void receiveAll(String payload) {
-
         String[] arr = payload.split("_");
         int duration = Integer.parseInt(arr[1]);
 
 		final Thread thisThread = Thread.currentThread();
-		final int timeToRun = duration * 60000; // time in millis
+		final int timeToRun = duration * 60000;
 
 		new Thread(new Runnable() {
 			public void run() {
@@ -63,7 +62,6 @@ public class UdpClient {
 					Thread.sleep(timeToRun);
 					thisThread.interrupt();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
