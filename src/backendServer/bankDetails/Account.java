@@ -1,7 +1,6 @@
-package backendServer.src.bankDetails;
-import java.util.*;
+package src.backendServer.bankDetails;
 
-import Constants.Currency;
+import src.constants.Currency;
 
 public class Account{
     private int accNumber;

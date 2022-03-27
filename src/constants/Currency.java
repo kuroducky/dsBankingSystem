@@ -1,4 +1,4 @@
-package Constants;
+package src.constants;
 
 public enum Currency{
     SGD,

@@ -1,9 +1,9 @@
-package backendServer.src;
+package src.backendServer;
 
-import Constants.Currency;
-import backendServer.src.Callback.Callback;
-import backendServer.src.UdpServer.UdpServer;
-import backendServer.src.bankDetails.Bank;
+import src.backendServer.Callback.Callback;
+import src.backendServer.UdpServer.UdpServer;
+import src.backendServer.bankDetails.Bank;
+import src.constants.Currency;
 
 public class Main {
 

@@ -1,4 +1,4 @@
-package backendServer.src.UdpServer;
+package src.backendServer.UdpServer;
 
 import java.io.IOException;
 import java.net.*;

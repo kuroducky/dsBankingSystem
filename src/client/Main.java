@@ -1,9 +1,9 @@
-package client.src;
+package src.client;
 
 import java.util.Scanner;
 
-import Constants.Currency;
-import client.src.UdpClient.UdpClient;
+import src.client.UdpClient.UdpClient;
+import src.constants.Currency;
 
 public class Main {
     static Scanner sc;

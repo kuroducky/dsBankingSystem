@@ -1,4 +1,4 @@
-package client.src.UdpClient;
+package src.client.UdpClient;
 
 import java.io.*;
 import java.net.*;

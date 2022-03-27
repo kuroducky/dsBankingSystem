@@ -1,11 +1,10 @@
-package backendServer.src.bankDetails;
+package src.backendServer.bankDetails;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.Map.Entry;
 
-import Constants.Currency;
-import backendServer.src.Callback.Callback;
+import src.backendServer.Callback.Callback;
+import src.constants.Currency;
 
 public class Bank {
     private HashMap<Integer, Account> allAccounts;
