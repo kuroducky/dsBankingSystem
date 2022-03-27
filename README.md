@@ -9,7 +9,7 @@ java client/src/Main
 ```
 
 Run server using
-'''
+```
 javac backendServer/src/Main.java
 java backendServer/src/Main
-'''
+```
