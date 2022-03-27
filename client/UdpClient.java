@@ -29,4 +29,8 @@ public class UdpClient {
 
         return new String(packet.getData(), 0, packet.getLength());
     }
+
+    public String getAddress() {
+        return String.format("%s:%d", address.getHostAddress(), port);
+    }
 }
