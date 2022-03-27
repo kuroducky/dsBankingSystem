@@ -23,14 +23,61 @@ public class UdpClient {
     }
 
     public String receive() throws IOException {
-        byte[] buffer = new byte[256];
+        byte[] buffer = new byte[512];
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
         socket.receive(packet);
 
         return new String(packet.getData(), 0, packet.getLength());
     }
 
-    public String getAddress() {
-        return String.format("%s:%d", address.getHostAddress(), port);
+    public String sendAndReceive(String message) throws IOException {
+        int timeout = 1000;
+
+		send(message);
+		socket.setSoTimeout(timeout);
+
+		while (true) {
+			try {
+				return receive();
+			} catch (SocketTimeoutException e) {
+                return sendAndReceive(message);
+			}
+		}
+	}
+
+    public String getAddress() throws UnknownHostException {
+        return String.format("%s:%d", InetAddress.getLocalHost().getHostAddress(), socket.getLocalPort());
     }
+
+    public void receiveAll(String payload) {
+
+        String[] arr = payload.split("_");
+        int duration = Integer.parseInt(arr[1]);
+
+		final Thread thisThread = Thread.currentThread();
+		final int timeToRun = duration * 60000; // time in millis
+
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(timeToRun);
+					thisThread.interrupt();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
+
+		while (!Thread.interrupted()) {
+			// do something interesting.
+			try {
+				System.out.println(receive());
+			} catch (SocketTimeoutException e) {
+				// This is okay
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

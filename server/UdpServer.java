@@ -26,7 +26,7 @@ public class UdpServer {
     }
 
     public String receive() throws IOException {
-        byte[] buffer = new byte[256];
+        byte[] buffer = new byte[512];
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
         socket.receive(packet);
 
@@ -46,5 +46,17 @@ public class UdpServer {
 
     public void storeResponse(String requestId, String response) {
         responseList.put(requestId, response);
+    }
+
+    public DatagramSocket getSocket() {
+        return socket;
+    }
+
+    public String getClientAddress() {
+        return clientAddress.getHostAddress();
+    }
+    
+    public int getClientPort() {
+        return clientPort;
     }
 }

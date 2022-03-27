@@ -38,10 +38,14 @@ public class Main {
                     String payload = processRequest(choice);
                     String message = String.format("%s|%d_%s", client.getAddress(), count, payload);
                     count += 1;
-                    client.send(message);
 
-                    String response = client.receive();
+                    String response = client.sendAndReceive(message);
                     System.out.println(response);
+
+                    // Special case for monitor updates
+                    if (choice == 4) {
+                        client.receiveAll(payload);
+                    }
                 }
             }
         } catch (Exception e) {

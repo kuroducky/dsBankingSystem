@@ -1,6 +1,9 @@
 package server;
 
 public class Main {
+
+    private static UdpServer server;
+
     public static void main (String args[]) {
         int port = 1234;
         double loss = 0.0;
@@ -12,7 +15,7 @@ public class Main {
             System.out.printf("Invocation semantics: %s\n", amo ? "at-most-once" : "at-least-once");
             System.out.println("Starting server...");
 
-            UdpServer server = new UdpServer(port);
+            server = new UdpServer(port);
 
             while (true) {
                 String request = server.receive();
@@ -57,7 +60,11 @@ public class Main {
                 // response = depositOrWithdraw();
                 break;
             case 4:
-                // response = monitorUpdates();
+                // String address = server.getClientAddress();
+                // int port = server.getClientPort();
+                // Callback cb = new Callback(server.getSocket(), address, port, 1000);
+                // monitorUpdates(String.format("%s:%d", address, port), cb);
+                // response = "Done";
                 break;
             case 5:
                 // response = idempotent();
