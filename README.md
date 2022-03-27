@@ -4,12 +4,12 @@ CZ4013 - Distributed System Banking System
 
 Run client using
 ```
-javac client/src/Main.java
-java client/src/Main
+javac src/client/Main.java
+java src/client/Main
 ```
 
 Run server using
 ```
-javac backendServer/src/Main.java
-java backendServer/src/Main
+javac src/backendServer/Main.java
+java src/backendServer/Main
 ```

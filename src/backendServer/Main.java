@@ -1,5 +1,7 @@
 package src.backendServer;
 
+import java.util.Scanner;
+
 import src.backendServer.Callback.Callback;
 import src.backendServer.UdpServer.UdpServer;
 import src.backendServer.bankDetails.Bank;
@@ -15,6 +17,26 @@ public class Main {
         double loss = 0.0;
         boolean amo = true;     // at-most-once invocation semantics
         
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter a port:");
+        port = sc.nextInt();
+
+        System.out.println("Enter packet loss chance (0.0 - 1.0):");
+        loss = sc.nextDouble();
+
+        System.out.println("Choose invocation semantics:");
+        System.out.println("1. At-most-once");
+        System.out.println("2. At-least-once");
+        int choice = sc.nextInt();
+        if (choice == 1){
+            amo = true;
+        } else {
+            amo = false;
+        }
+
+        sc.close();
+
         try {
             System.out.printf("Port: %d\n", port);
             System.out.printf("Loss: %.1f\n", loss);

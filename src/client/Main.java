@@ -15,6 +15,12 @@ public class Main {
         int count = 0;
         sc = new Scanner(System.in);
 
+        System.out.println("Enter the server ip:");
+        hostName = sc.next();
+
+        System.out.println("Enter a port:");
+        portNumber = sc.nextInt();
+
         try {
             UdpClient client = new UdpClient(hostName, portNumber);
 
