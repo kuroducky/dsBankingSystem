@@ -1,5 +1,6 @@
 package src.backendServer;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 import src.backendServer.Callback.Callback;
@@ -114,7 +115,7 @@ public class Main {
             case 4:
                 String address = server.getClientAddress();
                 int port = server.getClientPort();
-                Callback cb = new Callback(server.getSocket(), address, port, 1000);
+                Callback cb = new Callback(server.getSocket(), address, port, Integer.parseInt(arr[0]));
                 bank.addCallback(String.format("%s:%d", address, port), cb);
                 response = "Done";
                 break;

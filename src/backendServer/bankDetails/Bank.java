@@ -66,10 +66,7 @@ public class Bank {
             Account temp = allAccounts.get(accNum);
             temp.setAccBalance(temp.getAccBalance() + amount);
             triggerCallback(String.format("%.2f deposited into %d", amount, accNum));
-        }
-
-        //Withdraw money choice = 1
-        if(choice == 2){
+        } else if (choice == 2){
             Account temp = allAccounts.get(accNum);
 
             if(temp.getAccBalance() > amount)
@@ -119,7 +116,7 @@ public class Bank {
         while (iterator.hasNext()) {
             Callback callback = iterator.next();
 
-            if (callback.checkTtl()) {
+            if (callback.stillAlive()) {
                 try {
                     callback.send(message);
                 } catch (IOException e) {

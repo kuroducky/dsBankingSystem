@@ -40,6 +40,7 @@ public class UdpClient {
 			try {
 				return receive();
 			} catch (SocketTimeoutException e) {
+				System.out.println("Timeout, resending request...");
                 return sendAndReceive(message);
 			}
 		}
