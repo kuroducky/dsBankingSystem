@@ -2,19 +2,20 @@ package src.backendServer.Callback;
 
 import java.io.IOException;
 import java.net.*;
+import java.time.Instant;
 
 public class Callback {
 
     DatagramSocket socket;
     private String address;
     private int port;
-    private int ttl;
+    private long ttl;
 
     public Callback(DatagramSocket serverSocket, String clientAddress, int clientPort, int timeout) {
         socket = serverSocket;
         address = clientAddress;
         port = clientPort;
-        ttl = timeout;
+        ttl = Instant.now().getEpochSecond() + timeout * 60;
     }
 
     public void send(String message) throws IOException {
@@ -25,10 +26,8 @@ public class Callback {
         System.out.println("Sent");
     }
     
-    public boolean checkTtl() {
-        if (ttl <= 0)
-            return false;
-        ttl -= 1;
-        return true; 
+    public boolean stillAlive() {
+        long now = Instant.now().getEpochSecond();
+        return ttl > now;
     }
 }
