@@ -1,6 +1,7 @@
 package src.backendServer;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import src.backendServer.Callback.Callback;
@@ -82,6 +83,13 @@ public class Main {
         String response = "";
         String[] arr = payload.split("\\|");
 
+        HashMap<Integer, String> currencyMap = new HashMap<>();
+        currencyMap.put(1, "SGD");
+        currencyMap.put(2, "USD");
+        currencyMap.put(3, "MYR");
+        currencyMap.put(4, "JPY");
+        currencyMap.put(5, "KRW");
+
         switch (option) {
             case 1:
                 Currency curr = Currency.valueOf(arr[2]);
@@ -96,22 +104,25 @@ public class Main {
                 else if (result == -1) {
                     response = "Account does not exist";
                 } else if (result == -2) {
-                    response = "PIN is incorrect";
+                    response = "Password is incorrect";
                 }
                 break;
             case 3:
-                float balance = bank.updateBalance(arr[0], Integer.parseInt(arr[1]), arr[2], Integer.parseInt(arr[3]), Float.parseFloat(arr[4]));
+                float balance = bank.updateBalance(arr[0], Integer.parseInt(arr[1]), arr[2], Integer.parseInt(arr[3]), Integer.parseInt(arr[4]), Float.parseFloat(arr[5]));
                 if (balance == -1) {
                     response = "Account does not exist";
                 }
                 else if (balance == -2) {
-                    response = "Pin is incorrect";
+                    response = "Password is incorrect";
                 } else if (balance == -3) {
                     response = "Account balance insufficient";
                 } else {
-                    response = String.format("Success, balance is %.2f", balance);
+                    String accountCurrency = bank.getAccountCurrency(Integer.parseInt(arr[1]));
+                    response = String.format("Success, your updated balance is %.2f %s ", balance, accountCurrency);
                 }
                 break;
+
+
             case 4:
                 String address = server.getClientAddress();
                 int port = server.getClientPort();
@@ -120,10 +131,33 @@ public class Main {
                 response = "Done";
                 break;
             case 5:
-                // response = idempotent();
+                float bankBalance = bank.checkBalance(Integer.parseInt(arr[1]), arr[2]);
+                if (bankBalance == -1) {
+                    response = "Account does not exist";
+                }
+                else if (bankBalance == -2) {
+                    response = "Password is incorrect";
+                } else {
+                    String accountCurrency = bank.getAccountCurrency(Integer.parseInt(arr[1]));
+                    response = String.format("Success, your updated balance is %.2f %s ", bankBalance, accountCurrency);
+                }
                 break;
             case 6:
-                // response = nonIdempotent();
+                int transferFund = bank.transferFunds(arr[0], Integer.parseInt(arr[1]), arr[2], Integer.parseInt(arr[3]), Float.parseFloat(arr[4]), Integer.parseInt(arr[5]));
+                if(transferFund == 1) {
+                    response = "Account being transferred to does not exist";
+                    //float trfBalance = bank.updateBalance(arr[0], Integer.parseInt(arr[1]), arr[2], Integer.parseInt(arr[3]), 2, Float.parseFloat(arr[4]));
+                } else if (transferFund == -1) {
+                    response = "Account does not exist";
+                } else if (transferFund == -2) {
+                    response = "Password is incorrect";
+                } else if (transferFund == -3) {
+                    response = "Account balance insufficient";
+                } else {
+                    String transferCurrency = currencyMap.get(Integer.parseInt(arr[3]));
+                    response = String.format("Fund transfer successful! %.2f %s has been transferred to %d", Float.parseFloat(arr[4]), transferCurrency, Integer.parseInt(arr[5])) ;
+                }
+
                 break;
         }
         return response;

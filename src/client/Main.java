@@ -31,8 +31,8 @@ public class Main {
                 System.out.println("2. Close account");
                 System.out.println("3. Deposit / Withdraw");
                 System.out.println("4. Monitor updates");
-                System.out.println("5. Idempotent");
-                System.out.println("6. Non-idempotent");
+                System.out.println("5. Check bank balance");
+                System.out.println("6. Transfer funds");
                 System.out.println("7. Exit");
 
                 System.out.print("Choice: ");
@@ -133,6 +133,16 @@ public class Main {
         System.out.print("Password: ");
         String password = sc.next();
 
+        System.out.println("Currency type:");
+        int i = 1;
+        Currency[] currencies = Currency.values();
+        for (Currency c: currencies) {
+            System.out.printf("%d. %s\n", i, c);
+            i += 1;
+        }
+        Integer currencyChoice = sc.nextInt();
+
+
         System.out.println("Deposit or withdraw:");
         System.out.println("1. Deposit");
         System.out.println("2. Withdraw");
@@ -141,7 +151,7 @@ public class Main {
         System.out.print("Amount: ");
         Float amount = sc.nextFloat();
 
-        return "3_" + String.join("|", name, acctNum.toString(), password, choice.toString(), amount.toString());
+        return "3_" + String.join("|", name, acctNum.toString(), password, currencyChoice.toString(), choice.toString(), amount.toString());
     }
 
     private static String monitorUpdates() {
@@ -152,10 +162,48 @@ public class Main {
     }
 
     private static String idempotent() {
-        return "5_" + String.join("|", "Placeholder");
+        System.out.println("Please enter your account details");
+
+        System.out.print("Name: ");
+        String name = sc.next();
+
+        System.out.println("Account number: ");
+        Integer acctNum = sc.nextInt();
+
+        System.out.print("Password: ");
+        String password = sc.next();
+
+        return "5_" + String.join("|", name, acctNum.toString(), password);
     }
 
     private static String nonIdempotent() {
-        return "6_" + String.join("|", "Placeholder");
+        System.out.println("Please enter your account details");
+
+        System.out.print("Name: ");
+        String name = sc.next();
+
+        System.out.println("Account number: ");
+        Integer acctNum = sc.nextInt();
+
+        System.out.print("Password: ");
+        String password = sc.next();
+
+        System.out.println("Currency type: ");
+        int i = 1;
+        Currency[] currencies = Currency.values();
+        for (Currency c: currencies) {
+            System.out.printf("%d. %s\n", i, c);
+            i += 1;
+        }
+        Integer currencyChoice = sc.nextInt();
+
+        System.out.println("Amount to transfer: ");
+        Integer trfamount = sc.nextInt();
+
+        System.out.println("Account number to transfer to: ");
+        Integer trfAcctNum = sc.nextInt();
+
+
+        return "6_" + String.join("|", name, acctNum.toString(), password, currencyChoice.toString(), trfamount.toString(), trfAcctNum.toString());
     }
 }
