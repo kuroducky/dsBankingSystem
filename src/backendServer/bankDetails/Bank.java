@@ -50,7 +50,9 @@ public class Bank {
         return balance;
     }
 
-    public float updateBalance(String accHolderName, int accNum, String accPassword, int choice, float amount){
+    public float updateBalance(String accHolderName, int accNum, String accPassword, int currencyChoice, int choice, float amount){
+
+
         System.out.println("Your choice is: " + choice);
 
         //If account doesnt exit
@@ -63,6 +65,7 @@ public class Bank {
 
         if(choice == 1)
         {
+
             Account temp = allAccounts.get(accNum);
             temp.setAccBalance(temp.getAccBalance() + amount);
             triggerCallback(String.format("%.2f deposited into %d", amount, accNum));
@@ -125,6 +128,27 @@ public class Bank {
                 }
             } else {
                 iterator.remove();
+            }
+        }
+    }
+
+    public int transferFunds(String accHolderName, int accNum, String accPassword, float amount, int trfaccountnum) {
+        if(allAccounts.get(trfaccountnum) == null) {
+            return 1;
+        }
+        else {
+            Account trfAccount = allAccounts.get(trfaccountnum);
+            float trfBalance = updateBalance(accHolderName, accNum, accPassword,2, amount);
+            if (trfBalance == -1) {
+                return -1;
+            }
+            else if (trfBalance == -2) {
+                return -2;
+            } else if (trfBalance == -3) {
+                return -3;
+            } else {
+                trfAccount.setAccBalance(trfAccount.getAccBalance() + amount);
+                return -4;
             }
         }
     }
