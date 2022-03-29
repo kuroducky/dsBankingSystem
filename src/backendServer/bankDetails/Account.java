@@ -44,9 +44,7 @@ public class Account{
     public void setAccCurr(Currency accCurr){
         this.accCurr = accCurr;
     }
-    public float getAccBalance(){
-        return accBalance;
-    }
+    public float getAccBalance(){ return accBalance; }
     public void setAccBalance(float accBalance){
         this.accBalance = accBalance;
     }
