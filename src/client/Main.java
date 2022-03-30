@@ -7,6 +7,7 @@ import src.constants.Currency;
 
 public class Main {
     static Scanner sc;
+    static int FIXED_PASSWORD_LENGTH = 6;
     public static void main(String args[]) {
 
         String hostName = "127.0.0.1";
@@ -91,8 +92,13 @@ public class Main {
         System.out.print("Name: ");
         String name = sc.next();
 
-        System.out.print("Password: ");
+        System.out.print("Password (6 characters): ");
         String password = sc.next();
+        while(password.length() != FIXED_PASSWORD_LENGTH){
+            System.out.println("Password needs to contain exactly 6 characters");
+            System.out.print("Password (6 characters): ");
+            password = sc.next();
+        }
 
         System.out.println("Currency type:");
         int i = 1;
