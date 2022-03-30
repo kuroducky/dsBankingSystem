@@ -204,12 +204,12 @@ public class Main {
         Integer currencyChoice = sc.nextInt();
 
         System.out.println("Amount to transfer: ");
-        Integer trfamount = sc.nextInt();
+        Float trfAmount = sc.nextFloat();
 
         System.out.println("Account number to transfer to: ");
         Integer trfAcctNum = sc.nextInt();
 
 
-        return "6_" + String.join("|", name, acctNum.toString(), password, currencyChoice.toString(), trfamount.toString(), trfAcctNum.toString());
+        return "6_" + String.join("|", name, acctNum.toString(), password, currencyChoice.toString(), trfAmount.toString(), trfAcctNum.toString());
     }
 }
