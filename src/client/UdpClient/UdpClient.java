@@ -10,16 +10,16 @@ public class UdpClient {
     private DatagramSocket socket;
 
     public UdpClient(String hostName, int portNumber) throws IOException {
-        address = InetAddress.getByName(hostName);
-        port = portNumber;
-        socket = new DatagramSocket();
+        this.address = InetAddress.getByName(hostName);
+        this.port = portNumber;
+        this.socket = new DatagramSocket();
     }
 
     public void send(String message) throws IOException {
         byte[] buffer = message.getBytes();
 
-        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
-        socket.send(packet);
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, this.address, this.port);
+        this.socket.send(packet);
     }
 
     public String receive() throws IOException {
